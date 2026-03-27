@@ -6,14 +6,25 @@ import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp } from 
 import { generateAIResponse } from '@/lib/gemini';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, Star, Sparkles, Lock, ChevronRight, PenTool } from 'lucide-react';
+import { useAuth } from '@/lib/auth-context';
+import { useRouter } from 'next/navigation';
 
 export default function CommunityPage() {
+  const { user, loading: authLoading } = useAuth();
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<'review' | 'qna'>('qna');
   const [posts, setPosts] = useState<any[]>([]);
   const [aiAnalysis, setAiAnalysis] = useState<Record<string, string>>({});
   const [isAnalysing, setIsAnalysing] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/login');
+    }
+  }, [user, authLoading, router]);
+
+  useEffect(() => {
+    if (!user) return;
     const q = query(collection(db, "posts"), orderBy("created_at", "desc"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -35,6 +46,14 @@ export default function CommunityPage() {
 
   const reviews = posts.filter(p => p.type === 'review');
   const qnas = posts.filter(p => p.type === 'qna');
+
+  if (authLoading || !user) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 text-white p-6 lg:p-12">

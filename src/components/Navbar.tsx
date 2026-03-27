@@ -5,20 +5,27 @@ import { usePathname } from 'next/navigation';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import Image from 'next/image';
+import { useAuth } from '@/lib/auth-context';
+import { LogOut, Shield, User as UserIcon } from 'lucide-react';
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-const navItems = [
-  { name: '교육 프로그램', href: '/' },
-  { name: '교육 신청', href: '/apply' },
-  { name: '커뮤니티', href: '/community' },
-  { name: '관리자 대시보드', href: '/admin' },
-];
-
 export default function Navbar() {
   const pathname = usePathname();
+  const { user, userData, logout } = useAuth();
+
+  const navItems = [
+    { name: '교육 프로그램', href: '/' },
+    { name: '교육 신청', href: '/apply' },
+    { name: '커뮤니티', href: '/community' },
+  ];
+
+  // 관리자인 경우에만 메뉴 추가
+  if (userData?.role === 'admin') {
+    navItems.push({ name: '관리자 대시보드', href: '/admin' });
+  }
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-md">
@@ -56,9 +63,28 @@ export default function Navbar() {
             ))}
           </div>
           <div className="flex items-center space-x-4">
-             <button className="rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+            {user ? (
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 text-slate-600 bg-slate-100 py-1.5 px-3 rounded-full">
+                  {userData?.role === 'admin' ? <Shield className="w-3.5 h-3.5 text-blue-600" /> : <UserIcon className="w-3.5 h-3.5" />}
+                  <span className="text-xs font-bold">{userData?.username || '사용자'}님</span>
+                </div>
+                <button 
+                  onClick={logout}
+                  className="p-2 rounded-full text-slate-400 hover:text-red-500 hover:bg-red-50 transition"
+                  title="로그아웃"
+                >
+                  <LogOut className="w-5 h-5" />
+                </button>
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                className="rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+              >
                 로그인
-             </button>
+              </Link>
+            )}
           </div>
         </div>
       </div>

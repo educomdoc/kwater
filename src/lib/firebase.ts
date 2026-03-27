@@ -1,6 +1,7 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
+import { getAnalytics, isSupported } from 'firebase/analytics';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -9,6 +10,7 @@ const firebaseConfig = {
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
 const isConfigValid = !!firebaseConfig.apiKey && firebaseConfig.apiKey !== '여기에_API_KEY_입력';
@@ -22,4 +24,7 @@ const app = getApps().length > 0 ? getApp() : (isConfigValid ? initializeApp(fir
 const db = app ? getFirestore(app) : null as any;
 const auth = app ? getAuth(app) : null as any;
 
-export { app, db, auth };
+// Analytics는 브라우저 환경에서만 초기화
+const analytics = typeof window !== 'undefined' && app ? isSupported().then(yes => yes ? getAnalytics(app) : null) : null;
+
+export { app, db, auth, analytics };

@@ -21,6 +21,7 @@ export const metadata: Metadata = {
 };
 
 import Navbar from "@/components/Navbar";
+import { AuthProvider } from "@/lib/auth-context";
 
 export default function RootLayout({
   children,
@@ -33,15 +34,17 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-gray-50 text-gray-900">
-        <Navbar />
-        <main className="flex-1">
-          {children}
-        </main>
-        <footer className="border-t border-gray-200 bg-white py-8">
-          <div className="mx-auto max-w-7xl px-4 text-center text-sm text-gray-500">
-            &copy; {new Date().getFullYear()} 수자원공사 가족캠프. All rights reserved.
-          </div>
-        </footer>
+        <AuthProvider>
+          <Navbar />
+          <main className="flex-1">
+            {children}
+          </main>
+          <footer className="border-t border-gray-200 bg-white py-8">
+            <div className="mx-auto max-w-7xl px-4 text-center text-sm text-gray-500">
+              &copy; {new Date().getFullYear()} 수자원공사 가족캠프. All rights reserved.
+            </div>
+          </footer>
+        </AuthProvider>
       </body>
     </html>
   );

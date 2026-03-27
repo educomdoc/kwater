@@ -4,15 +4,27 @@ import { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, updateDoc, doc, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Users, CheckCircle, XCircle, Home, RefreshCw, Search } from 'lucide-react';
+import { Users, CheckCircle, XCircle, Home, RefreshCw, Search, ShieldAlert } from 'lucide-react';
+import { useAuth } from '@/lib/auth-context';
+import { useRouter } from 'next/navigation';
 
 export default function AdminDashboard() {
+  const { user, userData, loading: authLoading } = useAuth();
+  const router = useRouter();
   const [applications, setApplications] = useState<any[]>([]);
   const [rooms, setRooms] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
+    if (!authLoading && (!user || userData?.role !== 'admin')) {
+      // 관리자가 아니면 메인으로 리다이렉트 (추후 접근 권한 없음 페이지로 변경 가능)
+      if (!user) router.push('/login');
+    }
+  }, [user, userData, authLoading, router]);
+
+  useEffect(() => {
+    if (!user || userData?.role !== 'admin') return;
     // 실시간 데이터 구독 (Firestore)
     const q = query(collection(db, "applications"), orderBy("created_at", "desc"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -57,6 +69,32 @@ export default function AdminDashboard() {
     app.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     app.email?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (!user || userData?.role !== 'admin') {
+    return (
+      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-6 text-center">
+        <div className="bg-red-500/10 p-6 rounded-3xl mb-8 border border-red-500/20">
+          <ShieldAlert className="w-12 h-12 text-red-400" />
+        </div>
+        <h1 className="text-3xl font-black text-white mb-4">접근 권한이 없습니다</h1>
+        <p className="text-slate-500 mb-8">이 페이지는 관리자만 접근할 수 있습니다.</p>
+        <button 
+          onClick={() => router.push('/')}
+          className="bg-white text-slate-950 px-8 py-3 rounded-2xl font-bold hover:bg-slate-200 transition"
+        >
+          홈으로 돌아가기
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 text-white p-6 lg:p-12">
