@@ -6,6 +6,7 @@ import {
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword 
 } from 'firebase/auth';
+
 import { doc, setDoc, getDocs, collection, query, where } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -33,7 +34,7 @@ export default function LoginPage() {
         await signInWithEmailAndPassword(auth, internalEmail, password);
         router.push('/');
       } else {
-        // 회원가입 전 중복 아이디 체크
+        // 회원가입 전 중복 아이디 체크 (Firestore)
         const q = query(collection(db, 'users'), where('username', '==', userId));
         const querySnapshot = await getDocs(q);
         
@@ -42,26 +43,32 @@ export default function LoginPage() {
         }
 
         // 계정 생성
-        const userCredential = await createUserWithEmailAndPassword(auth, internalEmail, password);
-        const user = userCredential.user;
+        try {
+          const userCredential = await createUserWithEmailAndPassword(auth, internalEmail, password);
+          const user = userCredential.user;
 
-        // Firestore에 유저 정보 저장 (기본 권한: user)
-        // 만약 특정 아이디(예: admin)라면 admin 권한 부여
-        const role = userId === 'admin' ? 'admin' : 'user';
-        
-        await setDoc(doc(db, 'users', user.uid), {
-          username: userId,
-          fullName: fullName,
-          role: role,
-          createdAt: new Date().toISOString()
-        });
+          // Firestore에 유저 정보 저장
+          const role = userId === 'admin' ? 'admin' : 'user';
+          
+          await setDoc(doc(db, 'users', user.uid), {
+            username: userId,
+            fullName: fullName || (userId === 'admin' ? '관리자' : '사용자'),
+            role: role,
+            createdAt: new Date().toISOString()
+          });
 
-        alert('회원가입이 완료되었습니다!');
-        setIsLogin(true);
+          alert('회원가입이 완료되었습니다!');
+          setIsLogin(true);
+        } catch (authErr: any) {
+          if (authErr.code === 'auth/email-already-in-use') {
+            throw new Error('이미 등록된 계정입니다. 로그인을 시도해주세요.');
+          }
+          throw authErr;
+        }
       }
     } catch (err: any) {
-      console.error(err);
-      if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
+      console.error("Auth Error:", err);
+      if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
         setError('아이디 또는 비밀번호가 일치하지 않습니다.');
       } else {
         setError(err.message || '인증 오류가 발생했습니다.');

@@ -34,9 +34,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       
       if (currentUser) {
         // Firestore에서 추가 유저 데이터(권한 등) 가져오기
-        const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-        if (userDoc.exists()) {
-          setUserData(userDoc.data());
+        try {
+          const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+          if (userDoc.exists()) {
+            setUserData(userDoc.data());
+          } else {
+            console.warn("User document not found in Firestore for:", currentUser.uid);
+            // 만약 admin 아이디의 계정인데 문서가 없다면 임시로 권한 부여 가능 (선택 사항)
+            setUserData({ role: currentUser.email?.startsWith('admin@') ? 'admin' : 'user' });
+          }
+        } catch (err) {
+          console.error("Error fetching user data:", err);
+          setUserData(null);
         }
       } else {
         setUserData(null);
