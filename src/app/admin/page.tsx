@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
-import { collection, getDocs, updateDoc, doc, query, orderBy, onSnapshot } from 'firebase/firestore';
+import { collection, getDocs, updateDoc, doc, query, orderBy } from 'firebase/firestore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Users, CheckCircle, XCircle, Home, RefreshCw, Search, ShieldAlert } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
@@ -23,18 +23,25 @@ export default function AdminDashboard() {
     }
   }, [user, userData, authLoading, router]);
 
+  const fetchApplications = async () => {
+    setLoading(true);
+    try {
+      const q = query(collection(db, "applications"), orderBy("created_at", "desc"));
+      const querySnapshot = await getDocs(q);
+      const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setApplications(data);
+    } catch (error) {
+      console.error("Error fetching applications:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (!user || userData?.role !== 'admin') return;
-    // 실시간 데이터 구독 (Firestore)
-    const q = query(collection(db, "applications"), orderBy("created_at", "desc"));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setApplications(data);
-      setLoading(false);
-    }, (error) => {
-      console.error("Error fetching applications:", error);
-      setLoading(false);
-    });
+    
+    // 초기 1회 데이터 호출
+    fetchApplications();
 
     // 숙소 정보 가져오기 (고정 Mock 데이터 또는 DB)
     setRooms([
@@ -42,25 +49,34 @@ export default function AdminDashboard() {
       { id: 'r2', name: '생활관 102호', cap: 2 },
       { id: 'r3', name: '생활관 201호', cap: 4 },
     ]);
-
-    return () => unsubscribe();
-  }, []);
+  }, [user, userData]);
 
   const updateStatus = async (id: string, newStatus: string) => {
+    const previousApps = [...applications];
+    // 낙관적 업데이트 로직 (UI 먼저 갱신)
+    setApplications(prev => prev.map(app => app.id === id ? { ...app, status: newStatus } : app));
+
     try {
       const appRef = doc(db, "applications", id);
       await updateDoc(appRef, { status: newStatus });
       // 이 시점에 Cloud Function이 트리거되어 이메일 발송 가능
     } catch (error) {
+      // 실패 시 롤백
+      setApplications(previousApps);
       alert("상태 수정 중 오류 발생: " + error);
     }
   };
 
   const assignRoom = async (appId: string, roomId: string) => {
+    const previousApps = [...applications];
+    // 낙관적 업데이트 로직
+    setApplications(prev => prev.map(app => app.id === appId ? { ...app, room_id: roomId } : app));
+
     try {
       const appRef = doc(db, "applications", appId);
       await updateDoc(appRef, { room_id: roomId });
     } catch (error) {
+      setApplications(previousApps);
       alert("숙소 배정 중 오류 발생: " + error);
     }
   };
@@ -104,7 +120,17 @@ export default function AdminDashboard() {
             <div className="flex items-center gap-2 text-blue-600 font-bold uppercase tracking-widest text-xs mb-2">
               <Users className="w-4 h-4" /> Management
             </div>
-            <h1 className="text-4xl font-black">관리자 대시보드</h1>
+            <div className="flex items-center gap-4">
+              <h1 className="text-4xl font-black">관리자 대시보드</h1>
+              <button 
+                onClick={fetchApplications}
+                disabled={loading}
+                className="p-2 bg-white border border-blue-200 text-blue-600 rounded-full hover:bg-blue-50 transition shadow-sm disabled:opacity-50"
+                title="새로고침"
+              >
+                <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
+              </button>
+            </div>
             <p className="text-slate-600 mt-2">사용자의 교육 신청 현황을 관리하고 숙소를 배정하세요.</p>
           </div>
           

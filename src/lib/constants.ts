@@ -1,14 +1,14 @@
 export const MOCK_PROGRAMS = [
   { 
     id: '1', 
-    title: '2024 수자원 관리 전문가 양성 과정 (심화)', 
+    title: '느린 우체국 캠프', 
     round: '1차', 
-    description: '수자원 관리 시스템의 최신 트렌드와 심화 기술을 학습하는 핵심 과정입니다.', 
+    description: '캠프의 설명을 적는 란입니다.', 
     startDate: '2024-05-10', 
     endDate: '2024-05-24', 
     capacity: 30, 
     currentApplicants: 12, 
-    location: '대구 교육센터' 
+    location: '우치' 
   },
   { 
     id: '2', 

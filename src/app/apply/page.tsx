@@ -58,7 +58,7 @@ function ApplyForm() {
 
     try {
       // 1. Firebase에 저장 (기본 데이터베이스)
-      const docRef = await addDoc(collection(db, "applications"), {
+      await addDoc(collection(db, "applications"), {
         ...formData,
         userId: user?.uid || null,
         program_id: programId,
@@ -68,9 +68,13 @@ function ApplyForm() {
         created_at: serverTimestamp(),
       });
 
-      // 2. 구글 시트 연동 API 호출
+      // 낙관적 업데이트: DB 저장 완료 즉시 신청 완료 화면으로 전환
+      setSubmitted(true);
+      setTimeout(() => router.push('/'), 3000);
+
+      // 2. 구글 시트 연동 API 호출 (사용자는 이미 성공 화면을 보고 있음)
       try {
-        await fetch('/api/apply', {
+        fetch('/api/apply', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -83,11 +87,7 @@ function ApplyForm() {
         });
       } catch (sheetErr) {
         console.error("Google Sheets sync failed:", sheetErr);
-        // 시트 연동 실패해도 사용자에게는 성공으로 표시 (Firebase에는 저장되었으므로)
       }
-
-      setSubmitted(true);
-      setTimeout(() => router.push('/'), 3000);
     } catch (err: any) {
       alert('신청 처리 중 오류가 발생했습니다: ' + err.message);
     } finally {
@@ -108,7 +108,7 @@ function ApplyForm() {
     return (
       <div className="mx-auto max-w-7xl px-4 py-24 text-center text-slate-900">
         <h2 className="text-xl font-bold">로그인이 필요합니다.</h2>
-        <p className="mt-2 text-slate-600">교육 프로그램을 신청하려면 먼저 로그인해주세요.</p>
+        <p className="mt-2 text-slate-600">캠프를 신청하려면 먼저 로그인해주세요.</p>
         <button onClick={() => router.push('/login')} className="mt-6 px-6 py-2 bg-blue-600 text-white rounded-full font-bold hover:bg-blue-700 transition">로그인하기</button>
       </div>
     );
@@ -138,7 +138,7 @@ function ApplyForm() {
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <h2 className="text-2xl font-bold text-slate-900">교육 프로그램 신청</h2>
+            <h2 className="text-2xl font-bold text-slate-900">캠프 신청</h2>
             <p className="text-sm text-slate-600">정확한 정보 입력을 부탁드립니다.</p>
           </div>
         </div>
@@ -149,7 +149,7 @@ function ApplyForm() {
             <div className="col-span-1 sm:col-span-2 flex items-start gap-3 border-b border-blue-200 pb-4 mb-2">
               <GraduationCap className="w-5 h-5 text-blue-600 mt-1 shrink-0" />
               <div>
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">교육명</span>
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">캠프명</span>
                 <h3 className="text-lg font-bold text-slate-900 leading-tight">{program.title}</h3>
               </div>
             </div>
