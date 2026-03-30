@@ -79,20 +79,21 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-6 bg-[url('https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=2070&q=80')] bg-cover bg-center">
-      <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xl"></div>
+    <div className="relative min-h-screen flex items-center justify-center p-6 bg-blue-50">
+      <div className="absolute inset-0 bg-cover bg-center opacity-60" style={{ backgroundImage: "url('/hero-bg.png')" }} />
+      <div className="absolute inset-0 bg-gradient-to-b from-white/40 via-blue-50/80 to-blue-50 backdrop-blur-sm" />
       
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="relative w-full max-w-md bg-slate-900 border border-slate-800 rounded-[2.5rem] p-10 shadow-2xl"
+        className="relative w-full max-w-md bg-white border border-blue-100 rounded-[2.5rem] p-10 shadow-xl shadow-blue-900/5"
       >
         <div className="text-center mb-10">
-          <div className="inline-flex p-4 rounded-3xl bg-blue-500/10 mb-6">
-            {isLogin ? <LogIn className="w-8 h-8 text-blue-400" /> : <UserPlus className="w-8 h-8 text-emerald-400" />}
+          <div className="inline-flex p-4 rounded-3xl bg-blue-50 mb-6">
+            {isLogin ? <LogIn className="w-8 h-8 text-blue-600" /> : <UserPlus className="w-8 h-8 text-emerald-600" />}
           </div>
-          <h2 className="text-3xl font-black text-white">{isLogin ? '반갑습니다' : '새로운 시작'}</h2>
-          <p className="text-slate-500 mt-2">{isLogin ? '아이디로 로그인을 진행하세요' : '계정을 생성하여 캠프를 즐기세요'}</p>
+          <h2 className="text-3xl font-black text-slate-900">{isLogin ? '반갑습니다' : '새로운 시작'}</h2>
+          <p className="text-slate-600 mt-2">{isLogin ? '아이디로 로그인을 진행하세요' : '계정을 생성하여 캠프를 즐기세요'}</p>
         </div>
 
         <form onSubmit={handleAuth} className="space-y-6">
@@ -103,13 +104,13 @@ export default function LoginPage() {
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
               >
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-4 mb-2 block">이름</label>
+                <label className="text-xs font-bold text-slate-600 uppercase tracking-widest ml-4 mb-2 block">이름</label>
                 <input 
                   type="text" 
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   required 
-                  className="w-full bg-slate-950 border border-slate-800 rounded-2xl py-4 px-6 text-white text-sm focus:ring-2 focus:ring-emerald-500/50 outline-none transition-all"
+                  className="w-full bg-white border border-blue-200 rounded-2xl py-4 px-6 text-slate-900 text-sm focus:ring-2 focus:ring-emerald-500/50 outline-none transition-all shadow-sm"
                   placeholder="실명을 입력하세요"
                 />
               </motion.div>
@@ -117,31 +118,31 @@ export default function LoginPage() {
           </AnimatePresence>
 
           <div>
-            <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-4 mb-2 block">아이디</label>
+            <label className="text-xs font-bold text-slate-600 uppercase tracking-widest ml-4 mb-2 block">아이디</label>
             <input 
               type="text" 
               value={userId}
               onChange={(e) => setUserId(e.target.value)}
               required 
-              className="w-full bg-slate-950 border border-slate-800 rounded-2xl py-4 px-6 text-white text-sm focus:ring-2 focus:ring-blue-500/50 outline-none transition-all"
+              className="w-full bg-white border border-blue-200 rounded-2xl py-4 px-6 text-slate-900 text-sm focus:ring-2 focus:ring-blue-500/50 outline-none transition-all shadow-sm"
               placeholder="ID를 입력하세요"
             />
           </div>
 
           <div>
-            <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-4 mb-2 block">비밀번호</label>
+            <label className="text-xs font-bold text-slate-600 uppercase tracking-widest ml-4 mb-2 block">비밀번호</label>
             <input 
               type="password" 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required 
-              className="w-full bg-slate-950 border border-slate-800 rounded-2xl py-4 px-6 text-white text-sm focus:ring-2 focus:ring-blue-500/50 outline-none transition-all"
+              className="w-full bg-white border border-blue-200 rounded-2xl py-4 px-6 text-slate-900 text-sm focus:ring-2 focus:ring-blue-500/50 outline-none transition-all shadow-sm"
               placeholder="••••••••"
             />
           </div>
 
           {error && (
-            <div className="flex items-center gap-2 text-red-400 text-xs bg-red-400/10 p-4 rounded-xl border border-red-400/20">
+            <div className="flex items-center gap-2 text-red-600 text-xs bg-red-50 p-4 rounded-xl border border-red-200">
               <AlertCircle className="w-4 h-4" /> {error}
             </div>
           )}
@@ -150,25 +151,25 @@ export default function LoginPage() {
             disabled={loading}
             className={`w-full py-4 rounded-2xl font-black text-white shadow-xl transition-all ${
               isLogin 
-              ? 'bg-blue-600 hover:bg-blue-500 shadow-blue-500/20' 
-              : 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-500/20'
+              ? 'bg-blue-600 hover:bg-blue-500 shadow-blue-600/20' 
+              : 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/20'
             } active:scale-95 disabled:opacity-50`}
           >
             {loading ? '처리 중...' : (isLogin ? '로그인' : '회원가입')}
           </button>
         </form>
 
-        <div className="mt-8 pt-8 border-t border-slate-800 text-center">
+        <div className="mt-8 pt-8 border-t border-blue-100 text-center">
           <button 
             onClick={() => { setIsLogin(!isLogin); setError(''); }}
-            className="text-sm font-bold text-slate-500 hover:text-white transition"
+            className="text-sm font-bold text-slate-500 hover:text-blue-600 transition"
           >
             {isLogin ? '아직 계정이 없으신가요? 회원가입' : '이미 계정이 있으신가요? 로그인'}
           </button>
         </div>
 
         {userId === 'admin' && isLogin && (
-          <div className="mt-6 flex items-center justify-center gap-2 text-[10px] font-bold text-blue-400 uppercase tracking-[0.2em] animate-pulse">
+          <div className="mt-6 flex items-center justify-center gap-2 text-[10px] font-bold text-blue-600 uppercase tracking-[0.2em] animate-pulse">
             <ShieldCheck className="w-3 h-3" /> Admin Mode Detected
           </div>
         )}

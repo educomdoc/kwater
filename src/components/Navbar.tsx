@@ -19,8 +19,13 @@ export default function Navbar() {
   const navItems = [
     { name: '교육 프로그램', href: '/' },
     { name: '교육 신청', href: '/apply' },
-    { name: '커뮤니티', href: '/community' },
   ];
+
+  if (user) {
+    navItems.push({ name: '신청한 프로그램', href: '/my-applications' });
+  }
+
+  navItems.push({ name: '커뮤니티', href: '/community' });
 
   // 관리자인 경우에만 메뉴 추가
   if (userData?.role === 'admin') {

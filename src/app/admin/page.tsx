@@ -72,23 +72,23 @@ export default function AdminDashboard() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      <div className="min-h-screen bg-blue-50 flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
   if (!user || userData?.role !== 'admin') {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-6 text-center">
-        <div className="bg-red-500/10 p-6 rounded-3xl mb-8 border border-red-500/20">
-          <ShieldAlert className="w-12 h-12 text-red-400" />
+      <div className="min-h-screen bg-blue-50 flex flex-col items-center justify-center p-6 text-center">
+        <div className="bg-red-50 p-6 rounded-3xl mb-8 border border-red-100">
+          <ShieldAlert className="w-12 h-12 text-red-500" />
         </div>
-        <h1 className="text-3xl font-black text-white mb-4">접근 권한이 없습니다</h1>
-        <p className="text-slate-500 mb-8">이 페이지는 관리자만 접근할 수 있습니다.</p>
+        <h1 className="text-3xl font-black text-slate-900 mb-4">접근 권한이 없습니다</h1>
+        <p className="text-slate-600 mb-8">이 페이지는 관리자만 접근할 수 있습니다.</p>
         <button 
           onClick={() => router.push('/')}
-          className="bg-white text-slate-950 px-8 py-3 rounded-2xl font-bold hover:bg-slate-200 transition"
+          className="bg-blue-600 text-white px-8 py-3 rounded-2xl font-bold hover:bg-blue-700 transition shadow-sm"
         >
           홈으로 돌아가기
         </button>
@@ -97,39 +97,39 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white p-6 lg:p-12">
+    <div className="min-h-screen bg-blue-50 text-slate-900 p-6 lg:p-12">
       <div className="max-w-7xl mx-auto">
         <header className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
-            <div className="flex items-center gap-2 text-blue-400 font-bold uppercase tracking-widest text-xs mb-2">
+            <div className="flex items-center gap-2 text-blue-600 font-bold uppercase tracking-widest text-xs mb-2">
               <Users className="w-4 h-4" /> Management
             </div>
             <h1 className="text-4xl font-black">관리자 대시보드</h1>
-            <p className="text-slate-500 mt-2">사용자의 교육 신청 현황을 관리하고 숙소를 배정하세요.</p>
+            <p className="text-slate-600 mt-2">사용자의 교육 신청 현황을 관리하고 숙소를 배정하세요.</p>
           </div>
           
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input 
               type="text" 
               placeholder="신청자 검색..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="bg-slate-900 border border-slate-800 rounded-2xl py-3 pl-12 pr-6 text-sm focus:ring-2 focus:ring-blue-500/50 outline-none w-full md:w-64 transition-all"
+              className="bg-white border border-blue-200 rounded-2xl py-3 pl-12 pr-6 text-sm focus:ring-2 focus:ring-blue-500/50 outline-none w-full md:w-64 transition-all shadow-sm"
             />
           </div>
         </header>
 
         {loading ? (
           <div className="flex justify-center py-24">
-            <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : (
-          <div className="bg-slate-900 border border-slate-800 rounded-[2rem] overflow-hidden shadow-2xl">
+          <div className="bg-white border border-blue-100 rounded-[2rem] overflow-hidden shadow-sm">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-slate-800 bg-slate-900/50">
+                  <tr className="border-b border-blue-100 bg-blue-50/50">
                     <th className="px-8 py-6 text-xs font-bold text-slate-500 uppercase tracking-widest">신청자 정보</th>
                     <th className="px-8 py-6 text-xs font-bold text-slate-500 uppercase tracking-widest">프로그램 ID</th>
                     <th className="px-8 py-6 text-xs font-bold text-slate-500 uppercase tracking-widest">상태</th>
@@ -137,30 +137,30 @@ export default function AdminDashboard() {
                     <th className="px-8 py-6 text-xs font-bold text-slate-500 uppercase tracking-widest text-right">관리</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800">
+                <tbody className="divide-y divide-blue-50">
                   {filteredApps.length === 0 && (
                     <tr>
-                      <td colSpan={5} className="px-8 py-24 text-center text-slate-500">신청 내역이 없습니다.</td>
+                      <td colSpan={5} className="px-8 py-24 text-center text-slate-500 bg-white">신청 내역이 없습니다.</td>
                     </tr>
                   )}
                   {filteredApps.map((app) => (
                     <motion.tr 
                       layout
                       key={app.id} 
-                      className="hover:bg-slate-800/30 transition-colors group"
+                      className="hover:bg-blue-50/50 transition-colors group bg-white"
                     >
                       <td className="px-8 py-6">
-                        <div className="font-bold text-white">{app.fullName || '미입력'}</div>
+                        <div className="font-bold text-slate-900">{app.fullName || '미입력'}</div>
                         <div className="text-xs text-slate-500 mt-1">{app.email}</div>
                       </td>
-                      <td className="px-8 py-6 text-sm text-slate-400">
+                      <td className="px-8 py-6 text-sm text-slate-600">
                         {app.program_id || 'ID 없음'}
                       </td>
                       <td className="px-8 py-6">
                         <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                          app.status === 'approved' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 
-                          app.status === 'rejected' ? 'bg-red-500/10 text-red-400 border border-red-500/20' : 
-                          'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20'
+                          app.status === 'approved' ? 'bg-emerald-50 text-emerald-600 border border-emerald-200' : 
+                          app.status === 'rejected' ? 'bg-red-50 text-red-600 border border-red-200' : 
+                          'bg-yellow-50 text-yellow-600 border border-yellow-200'
                         }`}>
                           {app.status === 'approved' ? <CheckCircle className="w-3 h-3" /> : app.status === 'rejected' ? <XCircle className="w-3 h-3" /> : null}
                           {app.status}
@@ -168,15 +168,15 @@ export default function AdminDashboard() {
                       </td>
                       <td className="px-8 py-6">
                         <div className="relative flex items-center gap-2">
-                          <Home className="w-4 h-4 text-slate-600" />
+                          <Home className="w-4 h-4 text-slate-400" />
                           <select
                             value={app.room_id || ''}
                             onChange={(e) => assignRoom(app.id, e.target.value)}
-                            className="bg-transparent border-none text-sm text-slate-300 focus:ring-0 cursor-pointer hover:text-white transition"
+                            className="bg-transparent border-none text-sm text-slate-700 focus:ring-0 cursor-pointer hover:text-blue-600 transition outline-none"
                           >
-                            <option value="" className="bg-slate-900">미배정</option>
+                            <option value="" className="bg-white text-slate-900">미배정</option>
                             {rooms.map(room => (
-                              <option key={room.id} value={room.id} className="bg-slate-900">{room.name}</option>
+                              <option key={room.id} value={room.id} className="bg-white text-slate-900">{room.name}</option>
                             ))}
                           </select>
                         </div>
@@ -187,13 +187,13 @@ export default function AdminDashboard() {
                             <>
                               <button 
                                 onClick={() => updateStatus(app.id, 'approved')}
-                                className="p-2 rounded-xl bg-emerald-500 text-slate-950 hover:bg-emerald-400 transition"
+                                className="p-2 rounded-xl bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition"
                               >
                                 <CheckCircle className="w-4 h-4" />
                               </button>
                               <button 
                                 onClick={() => updateStatus(app.id, 'rejected')}
-                                className="p-2 rounded-xl bg-red-500 text-white hover:bg-red-400 transition"
+                                className="p-2 rounded-xl bg-red-100 text-red-700 hover:bg-red-200 transition"
                               >
                                 <XCircle className="w-4 h-4" />
                               </button>
@@ -201,7 +201,7 @@ export default function AdminDashboard() {
                           ) : (
                             <button 
                               onClick={() => updateStatus(app.id, 'pending')}
-                              className="p-2 rounded-xl bg-slate-700 text-white hover:bg-slate-600 transition"
+                              className="p-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition"
                             >
                               <RefreshCw className="w-4 h-4" />
                             </button>
