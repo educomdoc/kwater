@@ -104,7 +104,8 @@ export default function LoginPage() {
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
               >
-                <label className="text-xs font-bold text-slate-600 uppercase tracking-widest ml-4 mb-2 block">이름</label>
+                <label className="text-xs font-bold
+                 text-slate-600 uppercase tracking-widest ml-4 mb-2 block">이름</label>
                 <input 
                   type="text" 
                   value={fullName}

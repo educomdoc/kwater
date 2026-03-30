@@ -44,7 +44,7 @@ export default function Home() {
               한국수자원공사 <br /> 가족캠프
             </h1>
             <p className="mt-8 text-lg leading-8 text-slate-700 font-medium">
-              진행 중인 교육을 확인하고 원하는 프로그램과 시간을 신청해주세요
+              진행 중인 캠프를 확인하고 원하시는 차수에 신청해주세요
             </p>
           </motion.div>
         </div>
