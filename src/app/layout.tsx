@@ -20,8 +20,8 @@ const maplestory = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "수자원공사 가족캠프",
-  description: "수자원공사 가족캠프 신청 및 관리 시스템",
+  title: "한국수자원공사 가족캠프",
+  description: "한국수자원공사 가족캠프 신청 및 관리 시스템",
   icons: {
     icon: '/favicon.ico',
   },
@@ -48,7 +48,7 @@ export default function RootLayout({
           </main>
           <footer className="border-t border-gray-200 bg-white py-8">
             <div className="mx-auto max-w-7xl px-4 text-center text-sm text-gray-500">
-              &copy; {new Date().getFullYear()} 수자원공사 가족캠프. All rights reserved.
+              &copy; {new Date().getFullYear()} 한국수자원공사 가족캠프. All rights reserved.
             </div>
           </footer>
         </AuthProvider>
