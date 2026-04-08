@@ -263,12 +263,6 @@ export default function MyApplicationsPage() {
                           <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1 block">연락처</span>
                           <span className="text-sm text-slate-700">{app.phone}</span>
                         </div>
-                        <div className="md:col-span-2 lg:col-span-3">
-                          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1 block">신청 사유</span>
-                          <p className="text-sm text-slate-700 bg-blue-50 rounded-xl p-4 mt-1 border border-blue-100">
-                            {app.reason || '입력된 사유가 없습니다.'}
-                          </p>
-                        </div>
                       </div>
                     )}
                   </motion.div>

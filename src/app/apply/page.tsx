@@ -177,6 +177,13 @@ function ApplyForm() {
                 <p className="text-sm text-slate-900 font-medium">{program.location}</p>
               </div>
             </div>
+            <div className="flex items-center gap-3">
+              <ClipboardCheck className="w-5 h-5 text-purple-600 shrink-0" />
+              <div>
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">대상</span>
+                <p className="text-sm text-slate-900 font-medium">{program.description}</p>
+              </div>
+            </div>
           </div>
         )}
 
@@ -216,27 +223,17 @@ function ApplyForm() {
               />
             </div>
             <div className="group">
-              <label className="block text-xs font-bold text-slate-600 uppercase tracking-widest mb-2 ml-1">소속</label>
+              <label className="block text-xs font-bold text-slate-600 uppercase tracking-widest mb-2 ml-1">주소</label>
               <input
                 type="text"
                 value={formData.department}
                 onChange={(e) => setFormData({...formData, department: e.target.value})}
                 className="w-full bg-white border border-blue-200 rounded-2xl py-4 px-6 text-slate-900 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all outline-none shadow-sm"
-                placeholder="회사/부서명"
+                placeholder="도로명"
               />
             </div>
           </div>
 
-          <div className="group">
-            <label className="block text-xs font-bold text-slate-600 uppercase tracking-widest mb-2 ml-1">신청 사유</label>
-            <textarea
-              rows={4}
-              value={formData.reason}
-              onChange={(e) => setFormData({...formData, reason: e.target.value})}
-              className="w-full bg-white border border-blue-200 rounded-2xl py-4 px-6 text-slate-900 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all outline-none resize-none shadow-sm"
-              placeholder="본 교육 과정에 신청하시게 된 이유를 적어주세요."
-            />
-          </div>
 
           <div className="pt-6">
             <button
