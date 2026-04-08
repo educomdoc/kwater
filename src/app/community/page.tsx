@@ -24,6 +24,8 @@ export default function CommunityPage() {
   const [isWriteModalOpen, setIsWriteModalOpen] = useState(false);
   const [editingPost, setEditingPost] = useState<any>(null);
   const [newPostContent, setNewPostContent] = useState('');
+  const [newPostRating, setNewPostRating] = useState(5);
+  const [hoverRating, setHoverRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Admin Reply
@@ -84,6 +86,7 @@ export default function CommunityPage() {
   const handleWriteClick = () => {
     setEditingPost(null);
     setNewPostContent('');
+    setNewPostRating(5);
     setIsWriteModalOpen(true);
   };
 
@@ -91,6 +94,7 @@ export default function CommunityPage() {
   const handleEditPostStart = (post: any) => {
     setEditingPost(post);
     setNewPostContent(post.content);
+    setNewPostRating(post.rating || 5);
     setIsWriteModalOpen(true);
   };
 
@@ -99,6 +103,8 @@ export default function CommunityPage() {
     setIsWriteModalOpen(false);
     setEditingPost(null);
     setNewPostContent('');
+    setNewPostRating(5);
+    setHoverRating(0);
   };
 
   const handlePostSubmit = async (e: React.FormEvent) => {
@@ -114,7 +120,11 @@ export default function CommunityPage() {
 
       try {
         const postRef = doc(db, "posts", editingPost.id);
-        await updateDoc(postRef, { content: newPostContent });
+        const updateData: any = { content: newPostContent };
+        if (editingPost.type === 'review') {
+          updateData.rating = newPostRating;
+        }
+        await updateDoc(postRef, updateData);
       } catch (error) {
         console.error(error);
         setPosts(prevPosts);
@@ -133,6 +143,7 @@ export default function CommunityPage() {
         user_name: userData?.fullName || '수강생',
         user_id: user?.uid,
         date: new Date().toLocaleDateString('ko-KR'),
+        rating: activeTab === 'review' ? newPostRating : 0,
         loading: true // 로딩 중임을 나타내는 플래그
       };
       
@@ -147,6 +158,7 @@ export default function CommunityPage() {
           user_name: newPost.user_name,
           user_id: newPost.user_id,
           date: newPost.date,
+          rating: newPost.rating,
           created_at: serverTimestamp()
         });
         // 임시 ID를 실제 ID로 교체하고 로딩 상태 해제
@@ -342,8 +354,6 @@ export default function CommunityPage() {
                     <div className="flex items-center justify-between">
                       <div className="text-xs text-slate-500">
                         <span className="font-bold text-slate-700">{review.user_name || "수강생"}</span>
-                        <span className="mx-2">|</span>
-                        <span>{review.program_name || "교육 수료"}</span>
                         {review.loading && <span className="text-blue-500 ml-2 animate-pulse">등록 중...</span>}
                       </div>
 
@@ -440,6 +450,41 @@ export default function CommunityPage() {
               </h2>
               
               <form onSubmit={handlePostSubmit}>
+                {activeTab === 'review' && (
+                  <div className="mb-6">
+                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-3 ml-1">
+                      교육 만족도 평점
+                    </label>
+                    <div className="flex items-center gap-2 bg-blue-50/30 p-4 rounded-2xl border border-blue-100/50">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() => setNewPostRating(star)}
+                          onMouseEnter={() => setHoverRating(star)}
+                          onMouseLeave={() => setHoverRating(0)}
+                          className="relative transition-all duration-200 transform hover:scale-125 focus:outline-none"
+                        >
+                          <Star
+                            className={`w-8 h-8 transition-colors duration-200 ${
+                              (hoverRating || newPostRating) >= star
+                                ? "fill-yellow-400 text-yellow-500"
+                                : "text-slate-300"
+                            }`}
+                            style={{ 
+                              filter: (hoverRating || newPostRating) >= star 
+                                ? 'drop-shadow(0 0 8px rgba(234,179,8,0.3))' 
+                                : 'none' 
+                            }}
+                          />
+                        </button>
+                      ))}
+                      <span className="ml-4 text-lg font-black text-blue-600">
+                        {hoverRating || newPostRating}점
+                      </span>
+                    </div>
+                  </div>
+                )}
                 <textarea
                   required
                   rows={5}
