@@ -41,14 +41,14 @@ export default function Navbar() {
             <Link href="/" className="flex items-center gap-3 group">
               <div className="relative w-10 h-10 overflow-hidden rounded-xl bg-blue-50/50 p-1 group-hover:scale-110 transition-transform">
                 <Image 
-                  src="/logo_kwater.png" 
+                  src="/logo_kwater.jpg" 
                   alt="K-water logo" 
                   fill
                   className="object-contain"
                 />
               </div>
               <span className="text-xl font-black text-slate-900 tracking-tight">
-                수자원공사 <span className="text-blue-600">가족캠프</span>
+                한국가스공사 <span className="text-blue-600">직무공통교육</span>
               </span>
             </Link>
           </div>

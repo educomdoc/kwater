@@ -1,13 +1,12 @@
 'use client';
 
-import { Suspense, useState } from 'react';
+import { useEffect, Suspense, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
 import { motion } from 'framer-motion';
 import { ClipboardCheck, ArrowLeft, Send, Calendar, MapPin, Layers, GraduationCap } from 'lucide-react';
 import { MOCK_PROGRAMS } from '@/lib/constants';
-import { useEffect } from 'react';
 import { useAuth } from '@/lib/auth-context';
 
 function ApplyForm() {
@@ -24,6 +23,7 @@ function ApplyForm() {
     email: '',
     phone: '',
     department: '',
+    address: '',
     reason: '',
   });
 
@@ -223,15 +223,37 @@ function ApplyForm() {
               />
             </div>
             <div className="group">
-              <label className="block text-xs font-bold text-slate-600 uppercase tracking-widest mb-2 ml-1">주소</label>
+              <label className="block text-xs font-bold text-slate-600 uppercase tracking-widest mb-2 ml-1">부서/소속</label>
               <input
                 type="text"
                 value={formData.department}
                 onChange={(e) => setFormData({...formData, department: e.target.value})}
                 className="w-full bg-white border border-blue-200 rounded-2xl py-4 px-6 text-slate-900 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all outline-none shadow-sm"
-                placeholder="도로명"
+                placeholder="예: 한국수자원공사 OO부"
               />
             </div>
+            <div className="group">
+              <label className="block text-xs font-bold text-slate-600 uppercase tracking-widest mb-2 ml-1">주소</label>
+              <input
+                type="text"
+                value={formData.address}
+                onChange={(e) => setFormData({...formData, address: e.target.value})}
+                className="w-full bg-white border border-blue-200 rounded-2xl py-4 px-6 text-slate-900 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all outline-none shadow-sm"
+                placeholder="도로명 주소"
+              />
+            </div>
+          </div>
+
+          <div className="group">
+            <label className="block text-xs font-bold text-slate-600 uppercase tracking-widest mb-2 ml-1">신청 동기</label>
+            <textarea
+              required
+              rows={4}
+              value={formData.reason}
+              onChange={(e) => setFormData({...formData, reason: e.target.value})}
+              className="w-full bg-white border border-blue-200 rounded-2xl py-4 px-6 text-slate-900 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all outline-none shadow-sm resize-none"
+              placeholder="캠프에 참여하고 싶은 이유를 자유롭게 적어주세요."
+            />
           </div>
 
 

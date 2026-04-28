@@ -41,10 +41,10 @@ export default function Home() {
             className="mx-auto max-w-2xl text-center"
           >
             <h1 className="text-5xl font-extrabold tracking-tight sm:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-emerald-600">
-              한국수자원공사 <br /> 가족캠프
+              한국가스공사 <br /> 2026년 직무공통교육
             </h1>
             <p className="mt-8 text-lg leading-8 text-slate-700 font-medium">
-              진행 중인 캠프를 확인하고 원하시는 차수에 신청해주세요.
+              진행 중인 교육을 확인하고 원하시는 차수에 신청해주세요.
             </p>
           </motion.div>
         </div>
@@ -54,8 +54,8 @@ export default function Home() {
       <section id="programs" className="mx-auto max-w-7xl px-6 lg:px-8 py-1">
         <div className="flex items-center justify-between mb-12">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-slate-900">신청 가능한 캠프</h2>
-            <p className="mt-2 text-slate-600 font-medium">지금 신청 가능한 캠프를 확인하세요.</p>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-slate-900">신청 가능한 교육</h2>
+            <p className="mt-2 text-slate-600 font-medium">지금 신청 가능한 교육을 확인하세요.</p>
           </div>
           <Link href="/apply" className="text-blue-600 hover:text-blue-700 flex items-center gap-2 text-sm font-bold">
             전체 보기 <ArrowRight className="w-4 h-4" />

@@ -33,7 +33,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(currentUser);
       
       if (currentUser) {
-        // Firestore에서 추가 유저 데이터(권한 등) 가져오기
         try {
           const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
           if (userDoc.exists()) {
